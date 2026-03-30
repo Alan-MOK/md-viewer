@@ -19,3 +19,5 @@ npm-debug.log*
 .idea/
 
 doc/
+
+scripts/init-admin.js
