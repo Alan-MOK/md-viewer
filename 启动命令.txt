@@ -1,0 +1,5 @@
+启动命令：
+
+
+node server.js
+# 访问 http://localhost:3007/admin  登录 admin / admin1234

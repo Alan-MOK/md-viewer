@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <link rel="stylesheet" href="/doc.css">
+</head>
+<body>
+
+  <header class="page-header">
+    <div style="max-width:780px;margin:0 auto;">
+      <h1>{{TITLE}}</h1>
+      <div class="page-meta">
+        <span>发布于 {{CREATED_AT}}</span>
+        <span>最后更新 {{UPDATED_AT}}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="document-body">
+    {{CONTENT}}
+  </main>
+
+  <script>
+    // Wrap tables for horizontal scroll on mobile
+    document.querySelectorAll('table').forEach(function(table) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  </script>
+
+</body>
+</html>
