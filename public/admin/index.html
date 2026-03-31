@@ -438,9 +438,9 @@
   <div class="login-box">
     <h2>MD Viewer 管理后台</h2>
     <label>用户名</label>
-    <input type="text" id="login-username" placeholder="admin" autocomplete="username">
+    <input type="text" id="login-username" placeholder="" autocomplete="username">
     <label>密码</label>
-    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    <input type="password" id="login-password" placeholder="" autocomplete="current-password">
     <button id="login-btn">登录</button>
     <div id="login-error"></div>
   </div>
@@ -495,6 +495,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
 <script>
 (function () {
+  // If the admin UI is served under a subpath (e.g. /md-viewer),
+  // rewrite absolute fetch URLs so they go through the same prefix.
+  try {
+    const BASE_PREFIX = (function(){
+      const parts = location.pathname.split('/');
+      // keep first two segments: ['', 'md-viewer'] -> '/md-viewer'
+      return parts.length > 1 ? '/' + (parts[1] || '') : '';
+    })();
+    if (BASE_PREFIX && BASE_PREFIX !== '/') {
+      const _fetch = window.fetch.bind(window);
+      window.fetch = function(input, init) {
+        try {
+          if (typeof input === 'string' && input.startsWith('/')) {
+            input = BASE_PREFIX + input;
+          } else if (input && input.url && typeof input.url === 'string' && input.url.startsWith('/')) {
+            input = new Request(BASE_PREFIX + input.url, input);
+          }
+        } catch (e) {}
+        return _fetch(input, init);
+      };
+    }
+  } catch (e) {}
   // ===== State =====
   let token = localStorage.getItem('md_token');
   let docs = [];
@@ -665,7 +687,9 @@
   }
 
   function setDocUrl(slug) {
-    const url = window.location.origin + '/docs/' + slug;
+    const parts = window.location.pathname.split('/');
+    const basePrefix = parts.length > 1 ? '/' + (parts[1] || '') : '';
+    const url = window.location.origin + basePrefix + '/docs/' + slug;
     docUrlLink.textContent = url;
     docUrlLink.href = url;
     docUrlBar.style.display = 'flex';

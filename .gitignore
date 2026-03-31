@@ -5,7 +5,7 @@ node_modules/
 .env
 
 # Database / uploaded data
-data/
+data/db.sqlite
 
 # macOS system files
 .DS_Store
